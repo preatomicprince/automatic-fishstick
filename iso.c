@@ -9,6 +9,7 @@
 #include "entity.h"
 #include "input.h"
 #include "level.h"
+
 #include "debug.h"
 
 
@@ -17,23 +18,6 @@ SDL_Texture* pc_texture;
 ivec2 pc_rect;
 spritesheet* pss;
 ivec2 pc_vel;
-
-typedef struct mouse_ {
-    ivec2 pos;
-    unsigned int down :1;
-    ent* selected;
-    int vert_ind;
-} mouse;
-
-
-
-ivec2 mouse_pos;
-unsigned int mouse_down = 0;
-
-struct mouse_vert{
-  colider* colider;
-  int vert_index;
-};
 
 /*map*/
 typedef struct m_sqr_{ //individual map squares
@@ -70,9 +54,16 @@ int main() {
   SDL_Renderer* renderer = NULL;
   SDL_Window* window = NULL;
   input_t input;
+  input.mouse_l_click = 0;
+
+  #if DEBUG
+
   debug_tool_t debug_tool;
   debug_tool.selected_ent = NULL;
   debug_tool.selected_vertex = -1;
+
+  #endif
+  
   level_t level;
 
   SDL_Init(SDL_INIT_VIDEO);
@@ -131,24 +122,8 @@ int main() {
  * ^^^^ ^^^^ ^^^^ *
  ******************/
 
-  struct mouse_vert mv;
-  mv.colider = NULL;
-  mv.vert_index = -1;
-
   while (!(event.type == SDL_QUIT)){
-    SDL_RenderClear(renderer); //Clear screen
-
-    for (size_t i = 0; i < 32; i++){
-      for (size_t j = 0; j < 32; j++){
-        draw_m_sqr(renderer, map[i][j]);
-      }
-    }
-    
-    for (size_t i = 0; i < level.ent_count; i++){
-      render_ent(renderer, level.ents[i]);
-    }
-    
-      
+    SDL_RenderClear(renderer); //Clear screen      
       
       pc_vel.x = 0;
       pc_vel.y = 0;
@@ -160,6 +135,12 @@ int main() {
           handle_input(event, &input);
         }
       }
+      
+      #if DEBUG
+
+      update_debug_tool(&debug_tool, &level, &input);
+
+      #endif
 
       /*
       pc_rect.x += pc_vel.x*SPEED;
@@ -189,13 +170,22 @@ int main() {
         }
       }*/
 
-      render(renderer, pss, pc_rect);
-      #if DEBUG
-        update_debug_tool(&debug_tool, &level, &input);
-        if (debug_tool.selected_ent != NULL){
-          draw_ent_outline(renderer, debug_tool.selected_ent);
-          draw_colider(renderer, debug_tool.selected_ent->colider, (ivec2){debug_tool.selected_ent->rect.x, debug_tool.selected_ent->rect.y});
+      for (size_t i = 0; i < 32; i++){
+        for (size_t j = 0; j < 32; j++){
+          draw_m_sqr(renderer, map[i][j]);
         }
+      }
+      
+      for (size_t i = 0; i < level.ent_count; i++){
+        render_ent(renderer, level.ents[i]);
+      }
+    
+      render(renderer, pss, pc_rect);
+
+      #if DEBUG
+
+      draw_debug(renderer, &debug_tool);
+
       #endif
       
       
