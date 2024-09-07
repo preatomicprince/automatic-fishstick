@@ -69,10 +69,11 @@ m_sqr map[32][32];
 int main() {
   SDL_Renderer* renderer = NULL;
   SDL_Window* window = NULL;
-  mouse m1;
-  m1.selected = NULL;
-  m1.vert_ind = -1;
-
+  input_t input;
+  debug_tool_t debug_tool;
+  debug_tool.selected_ent = NULL;
+  debug_tool.selected_vertex = -1;
+  level_t level;
 
   SDL_Init(SDL_INIT_VIDEO);
   SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, 0, &window, &renderer);
@@ -88,10 +89,9 @@ int main() {
   ent* brick2 = init_ent((SDL_Rect){333, 256, 222, 256}, renderer, "../res/bricks.bmp");
   add_colider(brick2);
 
-  ent* ents[16];
-  ents[0] = brick;
-  ents[1] = brick2;
-  int ent_count = 2;
+  level.ents[0] = brick;
+  level.ents[1] = brick2;
+  level.ent_count = 2;
 
 
   spritesheet* pc_ss_d = make_sprite(renderer, "../res/pc_ss_d.bmp", 14);
@@ -144,8 +144,8 @@ int main() {
       }
     }
     
-    for (size_t i = 0; i < ent_count; i++){
-      render_ent(renderer, ents[i]);
+    for (size_t i = 0; i < level.ent_count; i++){
+      render_ent(renderer, level.ents[i]);
     }
     
       
@@ -156,91 +156,12 @@ int main() {
       while( SDL_PollEvent(&event)){
         if (event.type == SDL_QUIT){
           SDL_Quit();
-        }else if (event.type == SDL_KEYDOWN){
-          switch(event.key.keysym.sym){
-            case SDLK_LEFT:
-              pc_vel.x = -1;
-              break;
-
-            case SDLK_RIGHT:
-              pc_vel.x = 1;
-              break;
-
-            case SDLK_UP:
-              pc_vel.y = -1;
-              break;
-
-            case SDLK_DOWN:
-              pc_vel.y = 1;
-              break;
-
-            case SDLK_ESCAPE:
-              SDL_Quit();
-              return 1;
-              break;
-          }
-          
-        }else if (event.type == SDL_MOUSEBUTTONDOWN){
-          SDL_GetMouseState( &m1.pos.x, &m1.pos.y);
-          mouse_down = 1;
-          
-          
-          #if DEBUG
-            /*ENT COLIDER VERTEX SELECTION*/
-            if (m1.selected != NULL){
-              m1.vert_ind = select_vertex(m1.selected->colider, (ivec2){m1.selected->rect.x, m1.selected->rect.y}, m1.pos);
-            }
-
-            /*ENT SELECTION*/
-            if (m1.vert_ind == -1){
-              for (int i = 0; i < ent_count; i++){
-                if (m1.pos.x > ents[i]->rect.x && m1.pos.x < ents[i]->rect.x + ents[i]->rect.w){
-                  if (m1.pos.y > ents[i]->rect.y && m1.pos.y < ents[i]->rect.y + ents[i]->rect.h){
-                    m1.selected = ents[i];
-                    break;
-                  }
-                }
-                m1.selected = NULL;
-              }
-            }
-            
-          #endif
-
-        
-        }else if (event.type == SDL_MOUSEBUTTONUP){
-          SDL_GetMouseState( &m1.pos.x, &m1.pos.y);
-          mouse_down = 0;
-
-          #if DEBUG
-            /*MOVE AND DESELECT VERTEX*/
-            if (m1.vert_ind != -1){
-              m1.selected->colider->vertex[m1.vert_ind].x = m1.pos.x - m1.selected->rect.x;
-              m1.selected->colider->vertex[m1.vert_ind].y = m1.pos.y - m1.selected->rect.y;
-              m1.vert_ind = -1;
-            }
-          #endif
-          
-          
-          
-        }else if (event.type = SDL_MOUSEMOTION){
-          SDL_GetMouseState( &m1.pos.x, &m1.pos.y);
-
-          #if DEBUG
-            /*MOVE VERTEX*/
-            if (m1.vert_ind != -1){
-              m1.selected->colider->vertex[m1.vert_ind].x = m1.pos.x - m1.selected->rect.x;
-              m1.selected->colider->vertex[m1.vert_ind].y = m1.pos.y - m1.selected->rect.y;
-            }
-          #endif
-          
+        } else{
+          handle_input(event, &input);
         }
       }
 
-      /*if (pc_vel.x != 0 || pc_vel.y != 0){
-        printf("vel x: %d, y: %d \n", pc_vel.x, pc_vel.y);
-      }*/
-      
-
+      /*
       pc_rect.x += pc_vel.x*SPEED;
       pc_rect.y += pc_vel.y*SPEED;
 
@@ -266,13 +187,14 @@ int main() {
         }else if (pc_vel.y == -1){
           pss = pc_ss_u;
         }
-      }
+      }*/
 
       render(renderer, pss, pc_rect);
       #if DEBUG
-        if (m1.selected != NULL){
-          draw_ent_outline(renderer, m1.selected);
-          draw_colider(renderer, m1.selected->colider, (ivec2){m1.selected->rect.x, m1.selected->rect.y});
+        update_debug_tool(&debug_tool, &level, &input);
+        if (debug_tool.selected_ent != NULL){
+          draw_ent_outline(renderer, debug_tool.selected_ent);
+          draw_colider(renderer, debug_tool.selected_ent->colider, (ivec2){debug_tool.selected_ent->rect.x, debug_tool.selected_ent->rect.y});
         }
       #endif
       

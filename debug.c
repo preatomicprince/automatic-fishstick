@@ -27,33 +27,44 @@ int select_vertex(input_t* input, ent* ent){
     return -1;
 }
 
+int mouse_ent_collision(input_t* input, ent* ent){
+    if (
+        input->mouse_pos.x > ent->rect.x && 
+        input->mouse_pos.x < ent->rect.x + ent->rect.w && 
+        input->mouse_pos.y > ent->rect.y && 
+        input->mouse_pos.y < ent->rect.y + ent->rect.h){
+            return 1;
+    } else{
+        return 0;
+    }
+}
 void update_debug_tool(debug_tool_t* debug_tool, level_t* level, input_t* input){
     if (input->mouse_l_click){
 
         /*SELECT ENTITY*/
         if (debug_tool->selected_ent == NULL){
             for (int i = 0; i < level->ent_count; i++){
-                if (
-                    input->mouse_pos.x > level->ents[i]->rect.x 
-                    && input->mouse_pos.x < level->ents[i]->rect.x + level->ents[i]->rect.w
-                    && input->mouse_pos.y > level->ents[i]->rect.y 
-                    && input->mouse_pos.y < level->ents[i]->rect.y + level->ents[i]->rect.h)
-                {
+                if (mouse_ent_collision(input, level->ents[i])){
                     debug_tool->selected_ent = level->ents[i];
                     break;
-                }
-                /*DESELECT ENTITY*/
-                debug_tool->selected_ent = NULL;
+                } 
             }
 
         /*SELECT VERTEX*/
         }else if (debug_tool->selected_vertex == -1){
             debug_tool->selected_vertex = select_vertex(input, debug_tool->selected_ent);
 
+            /*DESELECT ENTITY*/
+            if (debug_tool->selected_vertex == -1){
+                if (!mouse_ent_collision(input, debug_tool->selected_ent)){
+                    debug_tool->selected_ent = NULL;
+                }
+            }
+
         /*DRAG VERTEX*/    
         }else { //if ent and vertex selected
-            debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].x = input->mouse_pos.x;
-            debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].y = input->mouse_pos.y;
+            debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].x = input->mouse_pos.x - debug_tool->selected_ent->rect.x;
+            debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].y = input->mouse_pos.y - debug_tool->selected_ent->rect.y;
         }
     }else {
         /*DESELECT VERTEX*/
