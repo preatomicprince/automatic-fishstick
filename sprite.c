@@ -9,6 +9,11 @@ SDL_Texture* make_texture(SDL_Renderer* renderer, const char* filepath){
 
 spritesheet* make_sprite(SDL_Renderer* renderer, const char* filepath, int framecount){
     SDL_Surface* new_surface = SDL_LoadBMP(filepath);
+
+    if (new_surface == NULL){
+        printf("FAILED TO LOAD BMP! \n");
+    }
+
     SDL_Texture* new_texture = SDL_CreateTextureFromSurface(renderer, new_surface);
     ivec2 new_size = {new_surface->w, new_surface->h};
     spritesheet new_spritesheet = {new_texture, framecount, 0, new_size};
