@@ -27,6 +27,14 @@ int select_vertex(input_t* input, ent* ent){
     return -1;
 }
 
+void select_y_offset(input_t* input, debug_tool_t* debug_tool, ent* ent){
+    int y = ent->rect.y + ent->colider->y_offset;
+    if (input->mouse_pos.y < y + VERT_SIZE && input->mouse_pos.y > y - VERT_SIZE){
+        printf("selecrtefd");
+        debug_tool->adjusting_y = 1;
+    }
+}
+
 int mouse_ent_collision(input_t* input, ent* ent){
     if (
         input->mouse_pos.x > ent->rect.x && 
@@ -55,21 +63,32 @@ void update_debug_tool(debug_tool_t* debug_tool, level_t* level, input_t* input)
         }else if (debug_tool->selected_vertex == -1){
             debug_tool->selected_vertex = select_vertex(input, debug_tool->selected_ent);
 
+            /*select y offset*/
+            select_y_offset(input, debug_tool, debug_tool->selected_ent);
+
             /*DESELECT ENTITY*/
-            if (debug_tool->selected_vertex == -1){
+            if (debug_tool->selected_vertex == -1 && !debug_tool->adjusting_y){
                 if (!mouse_ent_collision(input, debug_tool->selected_ent)){
                     debug_tool->selected_ent = NULL;
                 }
+                
+            /*DRAG Y OFFSET*/
+            }else if (debug_tool->adjusting_y){
+                debug_tool->selected_ent->colider->y_offset = input->mouse_pos.y-debug_tool->selected_ent->rect.y;
             }
 
-        /*DRAG VERTEX*/    
         }else { //if ent and vertex selected
-            debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].x = input->mouse_pos.x - debug_tool->selected_ent->rect.x;
-            debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].y = input->mouse_pos.y - debug_tool->selected_ent->rect.y;
+            /*DRAG VERTEX*/
+            if (debug_tool->selected_vertex != -1){
+                debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].x = input->mouse_pos.x - debug_tool->selected_ent->rect.x;
+                debug_tool->selected_ent->colider->vertex[debug_tool->selected_vertex].y = input->mouse_pos.y - debug_tool->selected_ent->rect.y;
+            }
+
         }
     }else {
         /*DESELECT VERTEX*/
         debug_tool->selected_vertex = -1;
+        debug_tool->adjusting_y = 0;
     }
 }
 

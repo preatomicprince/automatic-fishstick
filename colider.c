@@ -24,7 +24,8 @@ colider* make_colider(spritesheet* spritesheet){
     
     new_colider->vertex_count = 4;
     new_colider->is_convex = 1;
-    new_colider->active = 1;    
+    new_colider->active = 1; 
+    new_colider->y_offset = spritesheet->size.y;
 
     return new_colider;
 }
@@ -59,7 +60,12 @@ int draw_colider(SDL_Renderer* renderer, colider* colider, ivec2 pos){
         SDL_Rect vrect = {v1.x-VERT_SIZE/2, v1.y-VERT_SIZE/2, VERT_SIZE, VERT_SIZE};
         SDL_RenderFillRect(renderer, &vrect);
     }
-    
+
+    SDL_SetRenderDrawColor(renderer, 254, 0, 0, 0);
+
+    int y = pos.y + colider->y_offset;
+
+    SDL_RenderDrawLine(renderer, 0, y, 1000, y);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     return 1;

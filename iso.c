@@ -71,10 +71,8 @@ int main() {
   SDL_Texture* dirt_t = SDL_CreateTextureFromSurface(renderer, dirt);
 
   ent* brick = init_ent((SDL_Rect){111, 0, 222, 256}, renderer, "../res/bricks.bmp");
-  add_colider(brick);
 
   ent* brick2 = init_ent((SDL_Rect){333, 256, 222, 256}, renderer, "../res/bricks.bmp");
-  add_colider(brick2);
 
   player_t* player = init_player(renderer);
 
@@ -82,13 +80,8 @@ int main() {
   level.ents[1] = brick2;
   level.ent_count = 2;
 
-  #if !DEBUG
-
   level.ents[2] = player->ent;
   level.ent_count += 1;
-
-  #endif
-  
 
   for (int i = 0; i < 32; i++){
     for (int j = 0; j < 32; j++){
@@ -126,11 +119,10 @@ int main() {
 
       update_debug_tool(&debug_tool, &level, &input);
 
-      #else
+      #endif
 
       update_player(player, &input);
 
-      #endif
 
       for (size_t i = 0; i < 32; i++){
         for (size_t j = 0; j < 32; j++){
@@ -140,7 +132,6 @@ int main() {
       
       for (size_t i = 0; i < level.ent_count; i++){
         render_ent(renderer, level.ents[i]);
-        draw_ent_outline(renderer, level.ents[i]);
       }
 
       #if DEBUG

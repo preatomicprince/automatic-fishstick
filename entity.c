@@ -8,6 +8,10 @@
 #include "colider.h"
 #include "entity.h"
 
+void add_colider(ent* ent){
+    ent->colider = make_colider(ent->spritesheet);
+}
+
 ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, const char* filepath){
     ent* new_ent = calloc(1, sizeof(ent));
     new_ent->vel = (ivec2){0,0};
@@ -17,12 +21,8 @@ ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, const char* filepath){
         new_ent->spritesheet = make_sprite(renderer, filepath, 0);
         new_ent->spritesheet_count += 1;
     }
+    add_colider(new_ent);
     return new_ent;
-}
-
-int add_colider(ent* ent){
-    ent->colider = make_colider(ent->spritesheet);
-    return 1;
 }
 
 int render_ent(SDL_Renderer* renderer, ent* ent){

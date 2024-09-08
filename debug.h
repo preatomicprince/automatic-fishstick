@@ -13,6 +13,7 @@
 typedef struct debug_tool_s{
     ent* selected_ent;
     int selected_vertex; //index of vertex in entity
+    int adjusting_y;
 }debug_tool_t;
 
 void select_ent(debug_tool_t* debug_tool, ent* ent);

@@ -17,7 +17,7 @@ typedef struct ent_{
 
 ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, const char* filepath);
 
-int add_colider(ent* ent);
+void add_colider(ent* ent);
 
 int render_ent(SDL_Renderer* renderer, ent* ent);
 

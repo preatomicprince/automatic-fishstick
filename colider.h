@@ -10,6 +10,7 @@
 typedef struct colider_ {
     ivec2 vertex[16];
     int vertex_count;
+    int y_offset;
     unsigned int active : 1;
     unsigned int is_convex : 1;
 } colider;

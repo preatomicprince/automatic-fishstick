@@ -12,7 +12,6 @@
 player_t* init_player(SDL_Renderer* renderer){
     player_t* new_player = calloc(1, sizeof(player_t));
     new_player->ent = init_ent((SDL_Rect){200, 200, 128, 128}, renderer, "../res/pc_ss_d.bmp");
-    add_colider(new_player->ent);
     load_player_textures(renderer, new_player);
 
     return new_player;
