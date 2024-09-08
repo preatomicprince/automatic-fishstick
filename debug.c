@@ -30,7 +30,6 @@ int select_vertex(input_t* input, ent* ent){
 void select_y_offset(input_t* input, debug_tool_t* debug_tool, ent* ent){
     int y = ent->rect.y + ent->colider->y_offset;
     if (input->mouse_pos.y < y + VERT_SIZE && input->mouse_pos.y > y - VERT_SIZE){
-        printf("selecrtefd");
         debug_tool->adjusting_y = 1;
     }
 }

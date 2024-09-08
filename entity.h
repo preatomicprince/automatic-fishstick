@@ -22,3 +22,5 @@ void add_colider(ent* ent);
 int render_ent(SDL_Renderer* renderer, ent* ent);
 
 int draw_ent_outline(SDL_Renderer* renderer, ent* ent);
+
+void y_sort_ents(ent** ents, int ent_count);

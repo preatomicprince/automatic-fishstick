@@ -122,6 +122,7 @@ int main() {
       #endif
 
       update_player(player, &input);
+      y_sort_ents(level.ents, level.ent_count);
 
 
       for (size_t i = 0; i < 32; i++){
