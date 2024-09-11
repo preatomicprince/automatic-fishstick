@@ -15,7 +15,7 @@ spritesheet* make_sprite(SDL_Renderer* renderer, const char* filepath, int frame
     }
 
     SDL_Texture* new_texture = SDL_CreateTextureFromSurface(renderer, new_surface);
-    ivec2 new_size = {new_surface->w, new_surface->h};
+    SDL_Point new_size = {new_surface->w, new_surface->h};
     spritesheet new_spritesheet = {new_texture, framecount, 0, new_size};
 
     spritesheet* spritesheet_ptr = calloc(1, sizeof(spritesheet));
@@ -26,7 +26,7 @@ spritesheet* make_sprite(SDL_Renderer* renderer, const char* filepath, int frame
     return spritesheet_ptr;
 }
 
-int render(SDL_Renderer* renderer, spritesheet* spritesheet, ivec2 pos){
+int render(SDL_Renderer* renderer, spritesheet* spritesheet, SDL_Point pos){
     SDL_Rect sheet_rect = {pos.x, pos.y, spritesheet->size.x, spritesheet->size.y};
     
     

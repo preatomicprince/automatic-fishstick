@@ -11,8 +11,8 @@
 
 player_t* init_player(SDL_Renderer* renderer){
     player_t* new_player = calloc(1, sizeof(player_t));
-    new_player->ent = init_ent((SDL_Rect){200, 200, 128, 128}, renderer, "../res/pc_ss_d.bmp");
     load_player_textures(renderer, new_player);
+    new_player->ent = init_ent((SDL_Rect){200, 200, 128, 128}, renderer, new_player->spritesheets[0], NULL);
 
     return new_player;
 }
@@ -84,11 +84,9 @@ void load_player_textures(SDL_Renderer* renderer, player_t* player){
     player->spritesheets[5] = make_sprite(renderer, "../res/pc_ss_ur.bmp", 14);
     player->spritesheets[6] = make_sprite(renderer, "../res/pc_ss_r.bmp", 14);
     player->spritesheets[7] = make_sprite(renderer, "../res/pc_ss_dr.bmp", 14);
-
-    player->ent->spritesheet = make_sprite(renderer, "../res/pc_ss_d.bmp", 14);
 }
 
 int render_player(SDL_Renderer* renderer, player_t* player){
-    render(renderer, player->ent->spritesheet, (ivec2){player->ent->rect.x, player->ent->rect.y});
+    render(renderer, player->ent->spritesheet, (SDL_Point){player->ent->rect.x, player->ent->rect.y});
     return 1;
 }

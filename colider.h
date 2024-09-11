@@ -8,7 +8,7 @@
 #include "sprite.h"
 
 typedef struct colider_ {
-    ivec2 vertex[16];
+    SDL_Point vertex[16];
     int vertex_count;
     int y_offset;
     unsigned int active : 1;
@@ -19,4 +19,10 @@ colider* make_colider(spritesheet* spritesheet);
 
 int adjust_colider(SDL_Renderer* renderer, spritesheet* spritesheet, colider* colider);
 
-int draw_colider(SDL_Renderer* renderer, colider* colider, ivec2 pos);
+int draw_colider(SDL_Renderer* renderer, colider* colider, SDL_Point pos);
+
+int ccw(SDL_Point p1, SDL_Point p2, SDL_Point p3);
+
+int check_intersection(SDL_Point p1, SDL_Point p2, SDL_Point p3, SDL_Point p4);
+
+int check_collision(colider c1, colider c2);

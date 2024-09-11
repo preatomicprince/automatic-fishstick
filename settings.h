@@ -12,6 +12,5 @@
 #define DEBUG 1 // 1 if on
 
 /*typedefs*/
-typedef struct ivec2_ {int x, y;} ivec2;
 
 typedef struct fvec2_s {float x, y;} fvec2_t;

@@ -8,18 +8,57 @@
 #include "sprite.h"
 #include "colider.h"
 
+//check if three ordered points are counterclockise
+int ccw(SDL_Point p1, SDL_Point p2, SDL_Point p3){
+    return (p3.y - p1.y)*(p2.x - p1.x) > (p2.y - p1.y)*(p3.x - p1.x); // stolen from https://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
+}
+
+int check_intersection(SDL_Point p1, SDL_Point p2, 
+                        SDL_Point p3, SDL_Point p4){ //ibid.
+    return ccw(p1, p3, p4) != ccw(p2, p3, p4) && ccw(p1, p2, p2) != ccw(p1, p2, p3);
+}
+
+int check_collision(colider c1, colider c2){
+    SDL_Point p1, p2, p3, p4;
+
+    for (int i = 0; i < c1.vertex_count; i++){
+        p1 = c1.vertex[i];
+
+        if (i == c1.vertex_count - 1){
+            p2 = c1.vertex[0];
+        }else {
+            p2 = c1.vertex[i + 1];
+        }
+
+        for (int j = 0; j < c2.vertex_count; j++){
+            p3 = c2.vertex[j];
+
+            if (j == c2.vertex_count - 1){
+                p4 = c2.vertex[0];
+            }else {
+                p4 = c2.vertex[j + 1];
+            }
+
+            if (check_intersection(p1, p2, p3, p4)){
+                return 1;
+            }
+        }
+    }
+    return 0;    
+}
+
 colider* make_colider(spritesheet* spritesheet){
     colider* new_colider = calloc(1, sizeof(colider));
     if (spritesheet != NULL){
-        new_colider->vertex[0] = (ivec2){0,0};
-        new_colider->vertex[1] = (ivec2){spritesheet->size.x/(spritesheet->frame_count+1),0};
-        new_colider->vertex[2] = (ivec2){spritesheet->size.x/(spritesheet->frame_count+1), spritesheet->size.y};
-        new_colider->vertex[3] = (ivec2){0, spritesheet->size.y};
+        new_colider->vertex[0] = (SDL_Point){0,0};
+        new_colider->vertex[1] = (SDL_Point){spritesheet->size.x/(spritesheet->frame_count+1),0};
+        new_colider->vertex[2] = (SDL_Point){spritesheet->size.x/(spritesheet->frame_count+1), spritesheet->size.y};
+        new_colider->vertex[3] = (SDL_Point){0, spritesheet->size.y};
     }else{
-        new_colider->vertex[0] = (ivec2){0,0};
-        new_colider->vertex[1] = (ivec2){100,0};
-        new_colider->vertex[2] = (ivec2){100, 100};
-        new_colider->vertex[3] = (ivec2){0, 100};
+        new_colider->vertex[0] = (SDL_Point){0,0};
+        new_colider->vertex[1] = (SDL_Point){100,0};
+        new_colider->vertex[2] = (SDL_Point){100, 100};
+        new_colider->vertex[3] = (SDL_Point){0, 100};
     }
     
     new_colider->vertex_count = 4;
@@ -30,7 +69,7 @@ colider* make_colider(spritesheet* spritesheet){
     return new_colider;
 }
 
-int draw_colider(SDL_Renderer* renderer, colider* colider, ivec2 pos){
+int draw_colider(SDL_Renderer* renderer, colider* colider, SDL_Point pos){
     if  (colider->vertex_count < 3){
         printf("/n WARNING: Failed to draw colider. Too few vertices\n");
         return 0;
@@ -46,12 +85,12 @@ int draw_colider(SDL_Renderer* renderer, colider* colider, ivec2 pos){
     }
 
     for (int i = 0; i < colider->vertex_count; i++){
-        ivec2 v1, v2;
-        v1 = (ivec2){colider->vertex[i].x + pos.x, colider->vertex[i].y+pos.y};
+        SDL_Point v1, v2;
+        v1 = (SDL_Point){colider->vertex[i].x + pos.x, colider->vertex[i].y+pos.y};
         if (i+1 < colider->vertex_count){
-            v2 = (ivec2){colider->vertex[i+1].x + pos.x, colider->vertex[i+1].y+pos.y};
+            v2 = (SDL_Point){colider->vertex[i+1].x + pos.x, colider->vertex[i+1].y+pos.y};
         } else{
-            v2 = (ivec2){colider->vertex[0].x + pos.x, colider->vertex[0].y+pos.y};
+            v2 = (SDL_Point){colider->vertex[0].x + pos.x, colider->vertex[0].y+pos.y};
         }
         
         

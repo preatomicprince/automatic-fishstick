@@ -9,13 +9,13 @@
 
 typedef struct ent_{
     SDL_Rect rect;
-    ivec2 vel;
+    SDL_Point vel;
     spritesheet* spritesheet;
     int spritesheet_count;
     colider* colider;
 }ent;
 
-ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, const char* filepath);
+ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, spritesheet* spritesheet, const char* filepath);
 
 void add_colider(ent* ent);
 

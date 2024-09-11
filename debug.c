@@ -94,6 +94,6 @@ void update_debug_tool(debug_tool_t* debug_tool, level_t* level, input_t* input)
 void draw_debug (SDL_Renderer* renderer, debug_tool_t* debug_tool){
     if (debug_tool->selected_ent != NULL){
           draw_ent_outline(renderer, debug_tool->selected_ent);
-          draw_colider(renderer, debug_tool->selected_ent->colider, (ivec2){debug_tool->selected_ent->rect.x, debug_tool->selected_ent->rect.y});
+          draw_colider(renderer, debug_tool->selected_ent->colider, (SDL_Point){debug_tool->selected_ent->rect.x, debug_tool->selected_ent->rect.y});
         }
 }

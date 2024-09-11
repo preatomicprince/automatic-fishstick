@@ -27,13 +27,18 @@ void y_sort_ents(ent** ents, int ent_count){
 }
 
 
-ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, const char* filepath){
+ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, spritesheet* spritesheet, const char* filepath){
     ent* new_ent = calloc(1, sizeof(ent));
-    new_ent->vel = (ivec2){0,0};
+    new_ent->vel = (SDL_Point){0,0};
     new_ent->rect = rect;
     new_ent->spritesheet_count = 0;
+
     if (filepath != NULL){
         new_ent->spritesheet = make_sprite(renderer, filepath, 0);
+        new_ent->spritesheet_count += 1;
+        
+    }else if (spritesheet != NULL){
+        new_ent->spritesheet = spritesheet;
         new_ent->spritesheet_count += 1;
     }
     add_colider(new_ent);
@@ -41,7 +46,7 @@ ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, const char* filepath){
 }
 
 int render_ent(SDL_Renderer* renderer, ent* ent){
-    render(renderer, ent->spritesheet, (ivec2){ent->rect.x, ent->rect.y});
+    render(renderer, ent->spritesheet, (SDL_Point){ent->rect.x, ent->rect.y});
     return 1;
 }
 

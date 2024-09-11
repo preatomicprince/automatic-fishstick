@@ -13,10 +13,10 @@ typedef struct spritesheet_{
     int frame_count;
     int current_frame;
 
-    ivec2 size;
+    SDL_Point size;
 }spritesheet;
 
 spritesheet* make_sprite(SDL_Renderer* renderer, const char* filepath, int framecount);
 
-int render(SDL_Renderer* renderer, spritesheet* spritesheet, ivec2 pos);
+int render(SDL_Renderer* renderer, spritesheet* spritesheet, SDL_Point pos);
 

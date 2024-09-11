@@ -21,7 +21,7 @@ typedef struct m_sqr_{ //individual map squares
   SDL_Rect rect;
 }m_sqr;
 
-m_sqr m_sqr_init(SDL_Texture* texture, ivec2 pos, ivec2 size){
+m_sqr m_sqr_init(SDL_Texture* texture, SDL_Point pos, SDL_Point size){
   m_sqr new_sqr;
   
   new_sqr.texture = texture;
@@ -50,7 +50,7 @@ int main() {
   SDL_Window* window = NULL;
 
   input_t input;
-  input.mouse_l_click = 0;
+  memset(&input, 0, sizeof(input_t));
 
   #if DEBUG
 
@@ -70,9 +70,9 @@ int main() {
   SDL_Surface* dirt = SDL_LoadBMP("../res/tile1.bmp");
   SDL_Texture* dirt_t = SDL_CreateTextureFromSurface(renderer, dirt);
 
-  ent* brick = init_ent((SDL_Rect){111, 0, 222, 256}, renderer, "../res/bricks.bmp");
+  ent* brick = init_ent((SDL_Rect){111, 0, 222, 256}, renderer, NULL, "../res/bricks.bmp");
 
-  ent* brick2 = init_ent((SDL_Rect){333, 256, 222, 256}, renderer, "../res/bricks.bmp");
+  ent* brick2 = init_ent((SDL_Rect){333, 256, 222, 256}, renderer, NULL, "../res/bricks.bmp");
 
   player_t* player = init_player(renderer);
 
@@ -85,14 +85,14 @@ int main() {
 
   for (int i = 0; i < 32; i++){
     for (int j = 0; j < 32; j++){
-      ivec2 new_size = {222, 128};
+      SDL_Point new_size = {222, 128};
 
-      ivec2 new_pos;
+      SDL_Point new_pos;
 
       if (j%2){ //if even
-        ivec2 new_pos = {i*222, j*64 };
+        SDL_Point new_pos = {i*222, j*64 };
       } else{
-        ivec2 new_pos = {i*222 + 111, j*64};
+        SDL_Point new_pos = {i*222 + 111, j*64};
       }
 
       map[i][j] = m_sqr_init(dirt_t, new_pos, new_size);
@@ -122,6 +122,7 @@ int main() {
       #endif
 
       update_player(player, &input);
+
       y_sort_ents(level.ents, level.ent_count);
 
 
@@ -132,6 +133,12 @@ int main() {
       }
       
       for (size_t i = 0; i < level.ent_count; i++){
+        if (i != level.ent_count -1){
+          if (check_collision(*level.ents[i]->colider, *level.ents[i + 1]->colider)){
+            player->pos.x -= player->vel.x*X_SPEED*2;
+            player->pos.y -= player->vel.y*Y_SPEED*2;
+          }
+        }
         render_ent(renderer, level.ents[i]);
       }
 
