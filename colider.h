@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COLIDER
+#define COLIDER
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,4 +25,6 @@ int draw_colider(SDL_Renderer* renderer, colider* colider, SDL_Point pos);
 int ccw(SDL_Point p1, SDL_Point p2, SDL_Point p3);
 
 int check_intersection(SDL_Point p1, SDL_Point p2, SDL_Point p3, SDL_Point p4);
+
+#endif
 

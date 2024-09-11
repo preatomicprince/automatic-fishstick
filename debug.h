@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DEBUG_TOOL
+#define DEBUG_TOOL
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
@@ -23,3 +25,5 @@ void set_selected_vertex(debug_tool_t* debug_tool, int vertex);
 void update_debug_tool(debug_tool_t* debug_tool, level_t* level, input_t* input);
 
 void draw_debug (SDL_Renderer* renderer, debug_tool_t* debug_tool);
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYER
+#define PLAYER
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +9,7 @@
 #include "input.h"
 #include "entity.h"
 #include "sprite.h"
+#include "level.h"
 
 /*typedef enum direction_e{
     up,
@@ -34,3 +36,5 @@ void update_player(player_t* player, input_t* , level_t level);
 void load_player_textures(SDL_Renderer* renderer, player_t* player);
 
 int render_player(SDL_Renderer* renderer, player_t* player);
+
+#endif

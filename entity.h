@@ -1,14 +1,13 @@
+#ifndef ENTITY
+#define ENTITY
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 
 #include "settings.h"
 #include "sprite.h"
-#include "level.h"
 #include "colider.h"
-
-#ifndef ENTITY
-#define ENTITY
 
 typedef struct ent_{
     SDL_Rect rect;

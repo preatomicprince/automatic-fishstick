@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPRITE
+#define SPRITE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,4 +20,6 @@ typedef struct spritesheet_{
 spritesheet* make_sprite(SDL_Renderer* renderer, const char* filepath, int framecount);
 
 int render(SDL_Renderer* renderer, spritesheet* spritesheet, SDL_Point pos);
+
+#endif
 

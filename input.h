@@ -1,4 +1,6 @@
-#pragma once
+#ifndef INPUT
+#define INPUT
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
@@ -18,3 +20,5 @@ typedef struct input_s {
 }input_t;
 
 void handle_input(SDL_Event event, input_t* input);
+
+#endif

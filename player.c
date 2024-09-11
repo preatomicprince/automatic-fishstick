@@ -14,7 +14,9 @@
 player_t* init_player(SDL_Renderer* renderer){
     player_t* new_player = calloc(1, sizeof(player_t));
     load_player_textures(renderer, new_player);
-    new_player->ent = init_ent((SDL_Rect){500, 500, 128, 128}, renderer, new_player->spritesheets[0], NULL);
+    new_player->ent = init_ent((SDL_Rect){500, 0, 128, 128}, renderer, new_player->spritesheets[0], NULL);
+    new_player->pos.x = new_player->ent->rect.x;
+    new_player->pos.y = new_player->ent->rect.y;
 
     return new_player;
 }
@@ -49,7 +51,7 @@ void update_player(player_t* player, input_t* input, level_t level){
         player->vel.y += 1;
     }
 
-    player_col(player, level.ents, level.ent_count);
+    //player_col(player, level.ents, level.ent_count);
 
     player->pos.x += player->vel.x*X_SPEED;
     player->pos.y += player->vel.y*Y_SPEED;

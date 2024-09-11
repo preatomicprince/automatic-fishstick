@@ -127,6 +127,10 @@ int main() {
       
       for (size_t i = 0; i < level.ent_count; i++){
         render_ent(renderer, level.ents[i]);
+        
+        #if DEBUG
+        draw_colider(renderer, level.ents[i]->colider, (SDL_Point){level.ents[i]->rect.x, level.ents[i]->rect.y});
+        #endif
       }
 
       update_player(player, &input, level);
@@ -135,6 +139,7 @@ int main() {
       #if DEBUG
 
       draw_debug(renderer, &debug_tool);
+
 
       #endif
             
