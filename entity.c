@@ -12,6 +12,45 @@ void add_colider(ent* ent){
     ent->colider = make_colider(ent->spritesheet);
 }
 
+int check_collision(ent e1, ent e2){
+    SDL_Point p1, p2, p3, p4;
+
+    for (int i = 0; i < e1.colider->vertex_count; i++){
+        p1.x = e1.colider->vertex[i].x + e1.rect.x;
+        p1.y = e1.colider->vertex[i].y + e1.rect.y;
+
+        if (i == e1.colider->vertex_count - 1){
+            p2.x = e1.colider->vertex[0].x + e1.rect.x;
+            p2.y = e1.colider->vertex[0].y + e1.rect.y;
+        }else {
+            p2.x = e1.colider->vertex[i + 1].x + e1.rect.x;
+            p2.y = e1.colider->vertex[i + 1].y + e1.rect.y;
+        }
+
+        for (int j = 0; j < e2.colider->vertex_count; j++){
+            p3.x = e2.colider->vertex[j].x + e1.rect.x;
+            p3.y = e2.colider->vertex[j].y + e1.rect.y;
+
+            if (j == e2.colider->vertex_count - 1){
+                p4.x = e2.colider->vertex[0].x + e1.rect.x;
+                p4.y = e2.colider->vertex[0].y + e1.rect.y;
+            }else {
+                p4.x = e2.colider->vertex[j + 1].x + e1.rect.x;
+                p4.y = e2.colider->vertex[j + 1].y + e1.rect.y;
+            }
+
+            if (check_intersection(p1, p2, p3, p4)){
+                printf("Collision between ((%d, %d), (%d, %d)) and ((%d, %d), (%d, %d))\n", p1.x, p1.y,
+                                                                                            p2.x, p2.y,
+                                                                                            p3.x, p3.y,
+                                                                                            p4.x, p4.y);
+                return 1;
+            }
+        }
+    }
+    return 0;    
+}
+
 void y_sort_ents(ent** ents, int ent_count){
     for (int  i = 1; i < ent_count; i++){
         ent* switcher;
@@ -36,7 +75,7 @@ ent* init_ent(SDL_Rect rect, SDL_Renderer* renderer, spritesheet* spritesheet, c
     if (filepath != NULL){
         new_ent->spritesheet = make_sprite(renderer, filepath, 0);
         new_ent->spritesheet_count += 1;
-        
+
     }else if (spritesheet != NULL){
         new_ent->spritesheet = spritesheet;
         new_ent->spritesheet_count += 1;

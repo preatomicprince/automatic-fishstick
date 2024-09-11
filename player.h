@@ -29,7 +29,7 @@ typedef struct player_s{
 
 player_t* init_player(SDL_Renderer* renderer);
 
-void update_player(player_t* player, input_t* input);
+void update_player(player_t* player, input_t* , level_t level);
 
 void load_player_textures(SDL_Renderer* renderer, player_t* player);
 

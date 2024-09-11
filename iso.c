@@ -8,11 +8,9 @@
 #include "colider.h"
 #include "entity.h"
 #include "input.h"
-#include "level.h"
 #include "player.h"
 
 #include "debug.h"
-
 
 /*map*/
 typedef struct m_sqr_{ //individual map squares
@@ -121,11 +119,6 @@ int main() {
 
       #endif
 
-      update_player(player, &input);
-
-      y_sort_ents(level.ents, level.ent_count);
-
-
       for (size_t i = 0; i < 32; i++){
         for (size_t j = 0; j < 32; j++){
           draw_m_sqr(renderer, map[i][j]);
@@ -133,14 +126,11 @@ int main() {
       }
       
       for (size_t i = 0; i < level.ent_count; i++){
-        if (i != level.ent_count -1){
-          if (check_collision(*level.ents[i]->colider, *level.ents[i + 1]->colider)){
-            player->pos.x -= player->vel.x*X_SPEED*2;
-            player->pos.y -= player->vel.y*Y_SPEED*2;
-          }
-        }
         render_ent(renderer, level.ents[i]);
       }
+
+      update_player(player, &input, level);
+      y_sort_ents(level.ents, level.ent_count);
 
       #if DEBUG
 

@@ -25,4 +25,3 @@ int ccw(SDL_Point p1, SDL_Point p2, SDL_Point p3);
 
 int check_intersection(SDL_Point p1, SDL_Point p2, SDL_Point p3, SDL_Point p4);
 
-int check_collision(colider c1, colider c2);

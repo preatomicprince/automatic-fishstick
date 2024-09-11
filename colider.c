@@ -8,6 +8,10 @@
 #include "sprite.h"
 #include "colider.h"
 
+SDL_Point add_p(SDL_Point p1, SDL_Point p2){
+    return (SDL_Point){p1.x + p2.x, p1.y + p2.y};
+}
+
 //check if three ordered points are counterclockise
 int ccw(SDL_Point p1, SDL_Point p2, SDL_Point p3){
     return (p3.y - p1.y)*(p2.x - p1.x) > (p2.y - p1.y)*(p3.x - p1.x); // stolen from https://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
@@ -16,35 +20,6 @@ int ccw(SDL_Point p1, SDL_Point p2, SDL_Point p3){
 int check_intersection(SDL_Point p1, SDL_Point p2, 
                         SDL_Point p3, SDL_Point p4){ //ibid.
     return ccw(p1, p3, p4) != ccw(p2, p3, p4) && ccw(p1, p2, p2) != ccw(p1, p2, p3);
-}
-
-int check_collision(colider c1, colider c2){
-    SDL_Point p1, p2, p3, p4;
-
-    for (int i = 0; i < c1.vertex_count; i++){
-        p1 = c1.vertex[i];
-
-        if (i == c1.vertex_count - 1){
-            p2 = c1.vertex[0];
-        }else {
-            p2 = c1.vertex[i + 1];
-        }
-
-        for (int j = 0; j < c2.vertex_count; j++){
-            p3 = c2.vertex[j];
-
-            if (j == c2.vertex_count - 1){
-                p4 = c2.vertex[0];
-            }else {
-                p4 = c2.vertex[j + 1];
-            }
-
-            if (check_intersection(p1, p2, p3, p4)){
-                return 1;
-            }
-        }
-    }
-    return 0;    
 }
 
 colider* make_colider(spritesheet* spritesheet){
